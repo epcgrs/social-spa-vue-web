@@ -1,30 +1,40 @@
 <template>
-  <card-conteudo-vue
-    perfil="http://materializecss.com/images/yuna.jpg"
-    nome="Maria Silva"
-    data="31/03/2020 23:58"
-  >
 
-    <div class="card-image">
-      <img src="http://materializecss.com/images/sample-1.jpg">
-      <span class="card-title">Card Title</span>
-    </div>
+  <site-template>
 
-    <div class="card-content">
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores fugit ipsum velit laborum assumenda totam exercitationem ex. Veritatis rem, quaerat laborum, quidem iste esse voluptatibus illum natus, cum numquam magnam?
-    </div>
+    <publicar-conteudo></publicar-conteudo>
 
-  </card-conteudo-vue>
+    <card-conteudo-vue
+      perfil="http://materializecss.com/images/yuna.jpg"
+      nome="Maria Silva"
+      data="31/03/2020 23:58"
+    >
+
+      <card-detalhe-vue
+        img="http://materializecss.com/images/sample-1.jpg"
+        titulo=""
+        txt="Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, illo culpa harum possimus sit consequuntur animi aliquam a illum natus rerum placeat. Ab voluptatem pariatur temporibus ad error accusamus autem."
+      >
+      </card-detalhe-vue>
+
+    </card-conteudo-vue>
+
+  </site-template>
 </template>
 
 <script>
-
+import SiteTemplate from '@/templates/SiteTemplate'
 import CardConteudoVue from '@/components/social/CardConteudoVue'
+import CardDetalheVue from '@/components/social/CardDetalheVue'
+import PublicarConteudo from '@/components/social/PublicarConteudo'
 
 export default {
   name: 'Home',
   components: {
-    CardConteudoVue
+    CardConteudoVue,
+    CardDetalheVue,
+    PublicarConteudo,
+    SiteTemplate
   },
   data () {
     return {

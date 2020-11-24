@@ -10,7 +10,7 @@ export default {
   name: 'GridVue',
   props: {
     tamanho: {
-      type: Number,
+      type: String,
       required: true,
     }
   },

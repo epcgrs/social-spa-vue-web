@@ -1,30 +1,30 @@
 <template>
+  <div class="row">
+    <div class="card">
+      <div class="card-content">
+        <div class="row valign-wrapper">
+          <grid-vue tamanho="2">
+            <img :src="perfil" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+          </grid-vue>
+          <grid-vue tamanho="10">
+            <span class="black-text">
+              <h5><strong>{{nome}}</strong></h5>
+              <small>{{data}}</small>
+            </span>
+          </grid-vue>
+        </div>
 
-  <div class="card">
-    <div class="card-content">
-      <div class="row valign-wrapper">
-        <grid-vue tamanho="2">
-          <img :src="perfil" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-        </grid-vue>
-        <grid-vue tamanho="10">
-          <span class="black-text">
-            <h5><strong>{{nome}}</strong></h5>
-            <small>{{data}}</small>
-          </span>
-        </grid-vue>
+        <slot />
+
       </div>
-
-      <slot />
-
-    </div>
-    <div class="card-action">
-      <p>
-        <i class="small material-icons">favorite_border</i>
-        <i class="small material-icons">insert_comment</i>
-      </p>
+      <div class="card-action">
+        <p>
+          <i class="small material-icons">favorite_border</i>
+          <i class="small material-icons">insert_comment</i>
+        </p>
+      </div>
     </div>
   </div>
-
 </template>
 
 <script>
