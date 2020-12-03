@@ -1,17 +1,21 @@
 <template>
   <div>
     <header>
-      <nav-bar logo="Social" cor="deep-purple lighten-1" url="#" />
+      <nav-bar logo="Social" cor="deep-purple lighten-1" url="/" >
+          <li><router-link to="/">Home</router-link></li>
+          <li><router-link to="/login">Entrar</router-link></li>
+          <li><router-link to="/cadastro">Cadastrar</router-link></li>
+      </nav-bar>
     </header>
 
     <main>
       <div class="container">
         <div class="row">
-          <grid-vue tamanho="8">
+          <grid-vue tamanho="7">
             <slot name="menuesquerdo"></slot>
           </grid-vue>
 
-          <grid-vue tamanho="4">
+          <grid-vue tamanho="5" class="form-wrapper">
             <card-menu-vue>
             <slot name="principal"></slot>
             </card-menu-vue>
@@ -51,6 +55,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.form-wrapper {
+  margin-top: 50px;
+}
 </style>

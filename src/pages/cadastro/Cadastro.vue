@@ -7,11 +7,14 @@
 
     <div slot="principal" >
 
-      <h2>Login</h2>
+
+      <h2>Cadastro</h2>
+      <input type="text" placeholder="Nome" value="">
       <input type="email" placeholder="Email" value="">
       <input type="password" placeholder="Senha" value="">
-      <button class="btn">Entrar</button>
-      <router-link class="btn orange" to="/cadastro">Cadastre-se</router-link>
+      <input type="password" placeholder="Confirmar Senha" value="">
+      <button class="btn">Cadastrar</button>
+      <router-link class="btn orange" to="/login">Já Tenho Conta</router-link>
 
     </div>
 
@@ -28,6 +31,7 @@ export default {
   },
   data () {
     return {
+
     }
   }
 }
