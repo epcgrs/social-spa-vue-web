@@ -44,6 +44,7 @@ import SiteTemplate from '@/templates/SiteTemplate'
 import CardConteudoVue from '@/components/social/CardConteudoVue'
 import CardDetalheVue from '@/components/social/CardDetalheVue'
 import PublicarConteudo from '@/components/social/PublicarConteudo'
+import GridVue from '@/components/layouts/GridVue'
 
 export default {
   name: 'Home',
@@ -51,7 +52,8 @@ export default {
     CardConteudoVue,
     CardDetalheVue,
     PublicarConteudo,
-    SiteTemplate
+    SiteTemplate,
+    GridVue
   },
   data () {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <login-template>
+  <site-template>
 
     <div slot="menuesquerdo" class="imagem-esquerda">
       <img src="https://amplificadigital.com.br/wp-content/uploads/2020/01/amplifica_banner_blog-4.jpg" class="responsive-img" alt="">
@@ -7,37 +7,54 @@
 
     <div slot="principal" >
 
-      <h2>Login</h2>
+
+      <h2>Perfil</h2>
+      <input type="text" placeholder="Nome" v-model="usuario.name">
       <input type="email" placeholder="Email" v-model="usuario.email">
+
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>Imagem</span>
+          <input type="file">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+
       <input type="password" placeholder="Senha" v-model="usuario.password">
-      <button class="btn" @click="login">Entrar</button>
-      <router-link class="btn orange" to="/cadastro">Cadastre-se</router-link>
+      <input type="password" placeholder="Confirmar Senha" value=""  v-model="usuario.password_confirmation">
+      <button class="btn" @click="atualizar">Atualizar</button>
 
     </div>
 
-  </login-template>
+  </site-template>
 </template>
 
 <script>
-import LoginTemplate from '@/templates/LoginTemplate'
 import axios from 'axios'
+import SiteTemplate from '@/templates/SiteTemplate'
+
 export default {
   name: 'Login',
   components: {
-    LoginTemplate
+    SiteTemplate
   },
   data () {
     return {
       usuario: {
+        name: '',
         email: '',
-        password: ''
-      }
+        password: '',
+        password_confirmation: '',
+      },
+      userData: []
     }
   },
   methods: {
-    login() {
+    atualizar() {
 
-      axios.post('http://localhost:8000/api/usuario/login',  this.usuario )
+      axios.post('http://localhost:8000/api/usuario/salvar',  this.usuario )
       .then(response => {
         if( response.data.status && response.data.user.token ) {
           this.$toast.open({
@@ -72,6 +89,16 @@ export default {
 
     },
 
+  },
+  created() {
+    let userAux = localStorage.getItem('user');
+
+    if (userAux) {
+        this.userData = JSON.parse(userAux);
+
+        this.usuario.name = this.userData.name;
+        this.usuario.email = this.userData.email;
+    }
   }
 }
 </script>

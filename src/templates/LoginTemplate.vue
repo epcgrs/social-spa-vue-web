@@ -2,9 +2,10 @@
   <div>
     <header>
       <nav-bar logo="Social" cor="deep-purple lighten-1" url="/" >
-          <li><router-link to="/">Home</router-link></li>
-          <li><router-link to="/login">Entrar</router-link></li>
-          <li><router-link to="/cadastro">Cadastrar</router-link></li>
+          <li v-if="user == null"><router-link to="/login">Entrar</router-link></li>
+          <li v-if="user == null"><router-link to="/cadastro">Cadastrar</router-link></li>
+          <li v-if="user"><router-link to="/perfil">{{user.name}}</router-link></li>
+          <li v-if="user"><a @click="logout()">Sair</a></li>
       </nav-bar>
     </header>
 
@@ -46,11 +47,31 @@ import CardMenuVue from '@/components/layouts/CardMenuVue'
 
 export default {
   name: 'LoginTemplate',
+  data() {
+    return {
+      user: null,
+    }
+  },
   components: {
     NavBar,
     MainFooter,
     GridVue,
     CardMenuVue
+  },
+  methods: {
+    logout() {
+      localStorage.clear();
+      this.user = null;
+      this.$router.push('/login');
+    }
+  },
+  created() {
+    let userAux = localStorage.getItem('user');
+
+    if (userAux) {
+        this.user = JSON.parse(userAux);
+        this.$router.push('/')
+    }
   }
 }
 </script>
