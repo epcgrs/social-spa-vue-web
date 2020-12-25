@@ -10,12 +10,12 @@
 
       <h2>Perfil</h2>
       <input type="text" placeholder="Nome" v-model="usuario.name">
-      <input type="email" placeholder="Email" v-model="usuario.email">
+      <input type="email" placeholder="Email" disabled readonly v-model="usuario.email">
 
       <div class="file-field input-field">
         <div class="btn">
           <span>Imagem</span>
-          <input type="file">
+          <input type="file" @change="saveImage">
         </div>
         <div class="file-path-wrapper">
           <input class="file-path validate" type="text">
@@ -43,18 +43,20 @@ export default {
   data () {
     return {
       usuario: {
+        id: null,
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        image: '',
       },
-      userData: []
+      userData: [],
     }
   },
   methods: {
     atualizar() {
 
-      axios.post('http://localhost:8000/api/usuario/salvar',  this.usuario )
+      axios.put('http://localhost:8000/api/usuario/atualizar',  this.usuario, { headers: { 'authorization': 'Bearer ' + this.usuario.token } } )
       .then(response => {
         if( response.data.status && response.data.user.token ) {
           this.$toast.open({
@@ -66,7 +68,7 @@ export default {
 
           localStorage.setItem('user', JSON.stringify(response.data.user));
 
-          this.$router.push('/');
+          this.$router.go();
 
         }else if(!response.data.status) {
             this.$toast.open({
@@ -88,7 +90,21 @@ export default {
       })
 
     },
+    saveImage(e) {
+      let arquivo = e.target.files || e.dataTransfer.files;
+      if (!arquivo.length) {
+        return;
+      }
 
+      let reader = new FileReader();
+
+      reader.onloadend = (e) => {
+        this.usuario.image = e.target.result;
+      };
+
+      reader.readAsDataURL(arquivo[0]);
+
+    },
   },
   created() {
     let userAux = localStorage.getItem('user');
@@ -97,6 +113,7 @@ export default {
         this.userData = JSON.parse(userAux);
 
         this.usuario.name = this.userData.name;
+        this.usuario.id = this.userData.id;
         this.usuario.email = this.userData.email;
     }
   }
