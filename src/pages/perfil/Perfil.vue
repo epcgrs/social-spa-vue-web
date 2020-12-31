@@ -2,7 +2,7 @@
   <site-template>
 
     <div slot="menuesquerdo" class="imagem-esquerda">
-      <img src="https://amplificadigital.com.br/wp-content/uploads/2020/01/amplifica_banner_blog-4.jpg" class="responsive-img" alt="">
+      <img :src="usuario.image" class="responsive-img" alt="">
     </div>
 
     <div slot="principal" >
@@ -115,6 +115,7 @@ export default {
         this.usuario.name = this.userData.name;
         this.usuario.id = this.userData.id;
         this.usuario.email = this.userData.email;
+        this.usuario.image = this.userData.image;
     }
   }
 }

@@ -5,7 +5,7 @@
     <div slot="menuesquerdo">
       <div class="row valign-wrapper">
         <grid-vue tamanho="4">
-          <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+          <img :src="userData.image || '/static/images/avatar.png'" alt="" class="circle responsive-img" style="height: 80px; width: 80px; object-fit: cover;"> <!-- notice the "circle" class -->
         </grid-vue>
         <grid-vue tamanho="8">
           <span class="black-text">
@@ -57,7 +57,14 @@ export default {
   },
   data () {
     return {
+      userData: [],
+    }
+  },
+  created() {
+    let userAux = localStorage.getItem('user');
 
+    if (userAux) {
+        this.userData = JSON.parse(userAux);
     }
   }
 }

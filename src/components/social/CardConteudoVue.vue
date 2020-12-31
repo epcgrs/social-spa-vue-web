@@ -4,7 +4,7 @@
       <div class="card-content">
         <div class="row valign-wrapper">
           <grid-vue tamanho="2">
-            <img :src="perfil" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <img :src="perfil" alt="" class="circle responsive-img" style="height: 80px; width: 80px; object-fit: cover;"> <!-- notice the "circle" class -->
           </grid-vue>
           <grid-vue tamanho="10">
             <span class="black-text">
