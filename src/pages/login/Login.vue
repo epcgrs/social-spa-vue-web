@@ -20,7 +20,7 @@
 
 <script>
 import LoginTemplate from '@/templates/LoginTemplate'
-import axios from 'axios'
+
 export default {
   name: 'Login',
   components: {
@@ -37,7 +37,7 @@ export default {
   methods: {
     login() {
 
-      axios.post('http://localhost:8000/api/usuario/login',  this.usuario )
+      this.$http.post('usuario/login',  this.usuario )
       .then(response => {
         if( response.data.status && response.data.user.token ) {
           this.$toast.open({
@@ -46,7 +46,7 @@ export default {
               position: 'top-right',
               duration: 3000
           });
-
+          this.$store.commit('setUser', response.data.user)
           localStorage.setItem('user', JSON.stringify(response.data.user));
 
           this.$router.push('/');

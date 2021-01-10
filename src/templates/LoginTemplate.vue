@@ -5,7 +5,6 @@
           <li v-if="user == null"><router-link to="/login">Entrar</router-link></li>
           <li v-if="user == null"><router-link to="/cadastro">Cadastrar</router-link></li>
           <li v-if="user"><router-link to="/perfil">{{user.name}}</router-link></li>
-          <li v-if="user"><a @click="logout()">Sair</a></li>
       </nav-bar>
     </header>
 
@@ -59,17 +58,10 @@ export default {
     CardMenuVue
   },
   methods: {
-    logout() {
-      localStorage.clear();
-      this.user = null;
-      this.$router.push('/login');
-    }
   },
   created() {
-    let userAux = localStorage.getItem('user');
 
-    if (userAux) {
-        this.user = JSON.parse(userAux);
+    if (this.$store.getters.getUser) {
         this.$router.push('/')
     }
   }

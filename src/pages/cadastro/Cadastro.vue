@@ -26,7 +26,7 @@ import axios from 'axios'
 import LoginTemplate from '@/templates/LoginTemplate'
 
 export default {
-  name: 'Login',
+  name: 'Cadastro',
   components: {
     LoginTemplate
   },
@@ -43,7 +43,7 @@ export default {
   methods: {
     cadastro() {
 
-      axios.post('http://localhost:8000/api/usuario/salvar',  this.usuario )
+      this.$http.post('usuario/salvar',  this.usuario, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } } )
       .then(response => {
         if( response.data.status && response.data.user.token ) {
           this.$toast.open({
@@ -52,7 +52,7 @@ export default {
               position: 'top-right',
               duration: 3000
           });
-
+          this.$store.commit('setUser', response.data.user)
           localStorage.setItem('user', JSON.stringify(response.data.user));
 
           this.$router.push('/');

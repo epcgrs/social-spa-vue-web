@@ -69,16 +69,18 @@ export default {
   },
   methods: {
     logout() {
+      this.$store.commit('setUser', null)
+
       localStorage.clear();
       this.user = null;
       this.$router.push('/login');
     }
   },
   created() {
-    let userAux = localStorage.getItem('user');
+    let userAux = this.$store.getters.getUser;
 
     if (userAux) {
-        this.user = JSON.parse(userAux);
+        this.user = userAux;
     } else {
       this.$router.push('/login');
     }

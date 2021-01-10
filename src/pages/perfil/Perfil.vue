@@ -2,7 +2,7 @@
   <site-template>
 
     <div slot="menuesquerdo" class="imagem-esquerda">
-      <img :src="usuario.image" class="responsive-img" alt="">
+      <img :src="usuario.image || '/static/images/avatar.png'" class="responsive-img" alt="">
     </div>
 
     <div slot="principal" >
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SiteTemplate from '@/templates/SiteTemplate'
 
 export default {
@@ -56,7 +55,7 @@ export default {
   methods: {
     atualizar() {
 
-      axios.put('http://localhost:8000/api/usuario/atualizar',  this.usuario, { headers: { 'authorization': 'Bearer ' + this.usuario.token } } )
+      this.$http.put('usuario/atualizar',  this.usuario, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } } )
       .then(response => {
         if( response.data.status && response.data.user.token ) {
           this.$toast.open({
@@ -107,10 +106,10 @@ export default {
     },
   },
   created() {
-    let userAux = localStorage.getItem('user');
+    let userAux = this.$store.getters.getUser;
 
     if (userAux) {
-        this.userData = JSON.parse(userAux);
+        this.userData = userAux;
 
         this.usuario.name = this.userData.name;
         this.usuario.id = this.userData.id;

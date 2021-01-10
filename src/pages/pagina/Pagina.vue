@@ -5,20 +5,19 @@
     <div slot="menuesquerdo">
       <div class="row valign-wrapper">
         <grid-vue tamanho="4">
-          <img :src="userData.image || '/static/images/avatar.png'" alt="" class="circle responsive-img" style="height: 80px; width: 80px; object-fit: cover;"> <!-- notice the "circle" class -->
+          <img :src="authorData.image || '/static/images/avatar.png'" alt="" class="circle responsive-img" style="height: 80px; width: 80px; object-fit: cover;"> <!-- notice the "circle" class -->
         </grid-vue>
         <grid-vue tamanho="8">
           <span class="black-text">
-            <h5>{{userData.name}}</h5>
+            <h5>{{authorData.name}}</h5>
           </span>
         </grid-vue>
       </div>
     </div>
 
     <div slot="principal" v-scroll="this.handleScroll">
-      <publicar-conteudo></publicar-conteudo>
 
-      <div v-if="this.$store.getters.getFeed">
+      <div v-if="this.$store.getters.getFeed && this.$store.getters.getFeed.length">
         <card-conteudo-vue
 
           v-for="content in this.$store.getters.getFeed"
@@ -55,6 +54,7 @@
       </div>
     </div>
 
+
   </site-template>
 </template>
 
@@ -66,7 +66,7 @@ import PublicarConteudo from '@/components/social/PublicarConteudo'
 import GridVue from '@/components/layouts/GridVue'
 
 export default {
-  name: 'Home',
+  name: 'Pagina',
   components: {
     CardConteudoVue,
     CardDetalheVue,
@@ -80,6 +80,7 @@ export default {
       contents: [],
       showLoadMoreButton: true,
       stopScroll: false,
+      authorData: [],
     }
   },
   methods: {
@@ -94,9 +95,10 @@ export default {
       }
     },
     getFeed() {
-      this.$http.get('conteudo/feed', { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
+      this.$http.get('conteudo/user-content/' + this.$route.params.id , { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
-          this.$store.commit('setFeed', response.data)
+          this.$store.commit('setFeed', response.data.contents)
+          this.authorData = response.data.user_page
         })
         .catch(error => {
           this.$toast.open({
@@ -116,7 +118,7 @@ export default {
 
       this.$http.get(nextUrl, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
-          this.$store.commit('appendFeedItems', response.data);
+          this.$store.commit('appendFeedItems', response.data.contents);
           this.stopScroll = false;
         })
         .catch(error => {
