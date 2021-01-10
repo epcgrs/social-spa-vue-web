@@ -89,14 +89,15 @@ export default {
       }
 
       if (window.scrollY >= document.body.clientHeight - 1300) {
-        this.stopScroll = true;
-        this.loadMore();
+        this.loadMore()
+        this.stopScroll = true
       }
     },
     getFeed() {
       this.$http.get('conteudo/feed', { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
           this.$store.commit('setFeed', response.data)
+          this.stopScroll = false
         })
         .catch(error => {
           this.$toast.open({
@@ -113,11 +114,15 @@ export default {
         this.showLoadMoreButton = false;
         return;
       }
-
+      if(this.stopScroll) {
+        return;
+      }
       this.$http.get(nextUrl, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
-          this.$store.commit('appendFeedItems', response.data);
-          this.stopScroll = false;
+          if(this.$route.name == "Home") {
+            this.$store.commit('appendFeedItems', response.data);
+            this.stopScroll = false;
+          }
         })
         .catch(error => {
           this.$toast.open({

@@ -99,6 +99,7 @@ export default {
       text: '',
       commentsCount: this.totalComments,
       showComments: false,
+      userData: [],
     }
   },
   methods: {
@@ -113,7 +114,6 @@ export default {
       .then(response => {
         if(response.data.status) {
           this.likesCount = response.data.count_likes;
-          this.$store.commit('setFeed', response.data.content_list)
         }
       }).catch(error => {
         this.$toast.open({
@@ -134,9 +134,9 @@ export default {
     sendComment() {
       this.$http.post('conteudo/comment', {content_id: this.id , text: this.text}, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
       .then(response => {
-        if(response.data.status) {
-          this.$store.commit('setFeed', response.data.content_list)
-        }
+        this.commentsCount++;
+        let newComment = { text: response.data.comment.text, created_at: 'Agora mesmo', user: { name: this.userData.name, id: this.userData.id, image: this.userData.image, }  };
+        this.comments.push( newComment );
         this.text = '';
       }).catch(error => {
         this.$toast.open({
@@ -158,6 +158,9 @@ export default {
         .replace(/\s+/g, separator);
     }
   },
+  created() {
+     this.userData = this.$store.getters.getUser;
+  }
 }
 </script>
 

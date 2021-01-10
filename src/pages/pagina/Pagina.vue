@@ -3,14 +3,21 @@
   <site-template>
 
     <div slot="menuesquerdo">
-      <div class="row valign-wrapper">
+      <div class="row">
         <grid-vue tamanho="4">
           <img :src="authorData.image || '/static/images/avatar.png'" alt="" class="circle responsive-img" style="height: 80px; width: 80px; object-fit: cover;"> <!-- notice the "circle" class -->
         </grid-vue>
+      </div>
+      <div class="row">
         <grid-vue tamanho="8">
           <span class="black-text">
             <h5>{{authorData.name}}</h5>
           </span>
+        </grid-vue>
+      </div>
+      <div class="row">
+        <grid-vue tamanho="12">
+          <button v-if="authorData.id != userData.id" class="btn" @click="toggleFriend">{{ (following) ? 'Deixar de Seguir' : 'Seguir' }}</button>
         </grid-vue>
       </div>
     </div>
@@ -74,13 +81,14 @@ export default {
     SiteTemplate,
     GridVue
   },
-  data () {
+  data() {
     return {
       userData: [],
       contents: [],
       showLoadMoreButton: true,
       stopScroll: false,
       authorData: [],
+      following: false,
     }
   },
   methods: {
@@ -90,8 +98,8 @@ export default {
       }
 
       if (window.scrollY >= document.body.clientHeight - 1300) {
-        this.stopScroll = true;
-        this.loadMore();
+        this.loadMore()
+        this.stopScroll = true
       }
     },
     getFeed() {
@@ -99,6 +107,7 @@ export default {
         .then(response => {
           this.$store.commit('setFeed', response.data.contents)
           this.authorData = response.data.user_page
+          this.stopScroll = false
         })
         .catch(error => {
           this.$toast.open({
@@ -116,10 +125,16 @@ export default {
         return;
       }
 
+      if(this.stopScroll) {
+        return true;
+      }
+
       this.$http.get(nextUrl, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
-          this.$store.commit('appendFeedItems', response.data.contents);
-          this.stopScroll = false;
+          if(this.$route.name == "Pagina") {
+            this.$store.commit('appendFeedItems', response.data.contents);
+            this.stopScroll = false;
+          }
         })
         .catch(error => {
           this.$toast.open({
@@ -130,7 +145,20 @@ export default {
           });
         });
     },
-
+    toggleFriend() {
+      this.$http.post('usuario/seguir', {'user_id': this.authorData.id, 'logged_id': this.userData.id }, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
+        .then(response => {
+            this.following = !this.following;
+        })
+        .catch(error => {
+          this.$toast.open({
+              message: 'Ocorreu um erro.',
+              type: 'warning',
+              position: 'top-right',
+              duration: 3000
+          });
+        });
+    }
   },
   created() {
     this.userData = this.$store.getters.getUser;

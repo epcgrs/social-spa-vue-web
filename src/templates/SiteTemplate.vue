@@ -77,10 +77,8 @@ export default {
     }
   },
   created() {
-    let userAux = this.$store.getters.getUser;
-
-    if (userAux) {
-        this.user = userAux;
+    if (this.$store.getters.getUser) {
+        this.user = this.$store.getters.getUser;
     } else {
       this.$router.push('/login');
     }
