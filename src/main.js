@@ -18,6 +18,7 @@ var store = {
     user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     feed: [],
     userContents: [],
+    friends: []
   },
   getters: {
     getUser: state => {
@@ -28,6 +29,9 @@ var store = {
     },
     getFeed: state => {
       return state.feed.data;
+    },
+    getFriends: state => {
+      return state.friends;
     }
   },
   mutations: {
@@ -45,6 +49,9 @@ var store = {
         state.feed.data.push(item);
         state.feed.next_page_url = list.next_page_url;
       }
+    },
+    setFriends(state, list) {
+      state.friends = list;
     }
   }
 }

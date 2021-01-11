@@ -18,12 +18,7 @@
               </card-menu-vue>
 
               <card-menu-vue>
-                <h3>Amigos</h3>
-                <ul>
-                  <li>Rafael</li>
-                  <li>Claudia</li>
-                  <li>Aline</li>
-                </ul>
+                <slot name="menuesquesdoamigos" />
               </card-menu-vue>
           </grid-vue>
 
@@ -74,7 +69,7 @@ export default {
       localStorage.clear();
       this.user = null;
       this.$router.push('/login');
-    }
+    },
   },
   created() {
     if (this.$store.getters.getUser) {

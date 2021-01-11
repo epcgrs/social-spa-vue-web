@@ -21,6 +21,27 @@
         </grid-vue>
       </div>
     </div>
+    <div slot="menuesquesdoamigos">
+      <h3>Seguindo</h3>
+      <ul v-if="this.$store.getters.getFriends.length">
+        <li v-for="friend in this.$store.getters.getFriends" :key="friend.id">
+          <router-link :to="'/pagina/'+ friend.id +'/'+ slugify(friend.name)">
+            {{friend.name}}
+          </router-link>
+        </li>
+      </ul>
+      <p v-else>Este usuário não segue ninguém</p>
+
+      <h3>Seguidores</h3>
+      <ul v-if="this.followers.length">
+        <li v-for="follower in this.followers" :key="follower.id">
+          <router-link :to="'/pagina/'+ follower.id +'/'+ slugify(follower.name)">
+            {{follower.name}}
+          </router-link>
+        </li>
+      </ul>
+      <p v-else>Este usuário não tem seguidores</p>
+    </div>
 
     <div slot="principal" v-scroll="this.handleScroll">
 
@@ -89,6 +110,9 @@ export default {
       stopScroll: false,
       authorData: [],
       following: false,
+      authUserFriends: [],
+      textBtn: 'Seguir',
+      followers: []
     }
   },
   methods: {
@@ -108,6 +132,9 @@ export default {
           this.$store.commit('setFeed', response.data.contents)
           this.authorData = response.data.user_page
           this.stopScroll = false
+
+
+          this.getUserFriends();
         })
         .catch(error => {
           this.$toast.open({
@@ -149,6 +176,7 @@ export default {
       this.$http.post('usuario/seguir', {'user_id': this.authorData.id, 'logged_id': this.userData.id }, { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
         .then(response => {
             this.following = !this.following;
+            this.getUserFriends();
         })
         .catch(error => {
           this.$toast.open({
@@ -158,6 +186,45 @@ export default {
               duration: 3000
           });
         });
+    },
+    getUserFriends() {
+      this.$http.get('usuario/listar-amigos-pagina/' + this.authorData.id , { headers: { 'authorization': 'Bearer ' + this.$store.getters.getToken } })
+        .then(response => {
+          if(this.$route.name == "Pagina") {
+            this.$store.commit('setFriends', response.data.friends);
+            this.followers = response.data.followers;
+
+            this.authUserFriends = response.data.auth_friends;
+
+            this.verifyFollower();
+          }
+        })
+        .catch(error => {
+          this.$toast.open({
+              message: 'Ocorreu um erro ao carregar seus amigos.',
+              type: 'warning',
+              position: 'top-right',
+              duration: 3000
+          });
+        });
+    },
+    slugify(text, separator = "-") {
+      return text
+        .toString()
+        .normalize('NFD')                   // split an accented letter in the base letter and the acent
+        .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
+        .replace(/\s+/g, separator);
+    },
+    verifyFollower() {
+      for(let friend of this.authUserFriends) {
+        if(friend.id == this.authorData.id) {
+          this.following = true;
+          return;
+        }
+      }
     }
   },
   created() {
@@ -166,6 +233,7 @@ export default {
       this.$router.push('/login');
     }
     this.getFeed();
+
   },
 }
 </script>
